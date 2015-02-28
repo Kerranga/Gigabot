@@ -190,6 +190,23 @@
 //===========================================================================
 //=============================imported variables============================
 //===========================================================================
+static int pause_switch = 0;
+void setup_pausepin()
+{
+#if defined(PAUSE_PIN) && PAUSE_PIN > -1
+pinMode(PAUSE_PIN,INPUT);
+WRITE(PAUSE_PIN,HIGH);
+pause_switch = 0;
+#endif
+}
+
+void pause()
+{
+if (pause_switch == 0) {
+enquecommand("M600");
+pause_switch = 1;
+}
+}
 
 
 //===========================================================================
@@ -509,6 +526,7 @@ void servo_init()
 void setup()
 {
   setup_killpin();
+  setup_pausepin();
   setup_powerhold();
   MYSERIAL.begin(BAUDRATE);
   SERIAL_PROTOCOLLNPGM("start");
@@ -570,6 +588,15 @@ void setup()
   pinMode(SERVO0_PIN, OUTPUT);
   digitalWrite(SERVO0_PIN, LOW); // turn it off
 #endif // Z_PROBE_SLED
+
+#ifdef STAT_LED_RED
+  pinMode(STAT_LED_RED, OUTPUT);
+  digitalWrite(STAT_LED_RED, LOW); // turn it off
+#endif
+#ifdef STAT_LED_BLUE
+  pinMode(STAT_LED_BLUE, OUTPUT);
+  digitalWrite(STAT_LED_BLUE, LOW); // turn it off
+#endif  
 }
 
 
@@ -3426,7 +3453,7 @@ Sigma_Exit:
             target[E_AXIS]+= FILAMENTCHANGE_FIRSTRETRACT ;
           #endif
         }
-        plan_buffer_line(target[X_AXIS], target[Y_AXIS], target[Z_AXIS], target[E_AXIS], feedrate/60, active_extruder);
+        plan_buffer_line(target[X_AXIS], target[Y_AXIS], target[Z_AXIS], target[E_AXIS], feedrate/100, active_extruder);
 
         //lift Z
         if(code_seen('Z'))
@@ -3439,7 +3466,7 @@ Sigma_Exit:
             target[Z_AXIS]+= FILAMENTCHANGE_ZADD ;
           #endif
         }
-        plan_buffer_line(target[X_AXIS], target[Y_AXIS], target[Z_AXIS], target[E_AXIS], feedrate/60, active_extruder);
+        plan_buffer_line(target[X_AXIS], target[Y_AXIS], target[Z_AXIS], target[E_AXIS], feedrate/120, active_extruder);
 
         //move xy
         if(code_seen('X'))
@@ -3476,7 +3503,7 @@ Sigma_Exit:
           #endif
         }
 
-        plan_buffer_line(target[X_AXIS], target[Y_AXIS], target[Z_AXIS], target[E_AXIS], feedrate/120, active_extruder);
+        plan_buffer_line(target[X_AXIS], target[Y_AXIS], target[Z_AXIS], target[E_AXIS], feedrate/60, active_extruder);
 
         //finish moves
         st_synchronize();
@@ -3525,7 +3552,7 @@ Sigma_Exit:
         current_position[E_AXIS]=target[E_AXIS]-5; //the long retract of L is compensated by manual filament feeding
         plan_set_e_position(current_position[E_AXIS]);
         plan_buffer_line(target[X_AXIS], target[Y_AXIS], target[Z_AXIS], target[E_AXIS], feedrate/60, active_extruder); //should do nothing
-        plan_buffer_line(lastpos[X_AXIS], lastpos[Y_AXIS], target[Z_AXIS], target[E_AXIS], feedrate/60, active_extruder); //move xy back
+		plan_buffer_line(lastpos[X_AXIS], lastpos[Y_AXIS], target[Z_AXIS], target[E_AXIS], feedrate/60, active_extruder); //move xy back
         plan_buffer_line(lastpos[X_AXIS], lastpos[Y_AXIS], lastpos[Z_AXIS], target[E_AXIS], feedrate/60, active_extruder); //move z back
         plan_buffer_line(lastpos[X_AXIS], lastpos[Y_AXIS], lastpos[Z_AXIS], lastpos[E_AXIS], feedrate/60, active_extruder); //final untretract
     }
@@ -4213,6 +4240,12 @@ void manage_inactivity()
     if( 0 == READ(KILL_PIN) )
       kill();
   #endif
+  #if defined(PAUSE_PIN) && PAUSE_PIN > -1
+	if( 0 == READ(PAUSE_PIN) )
+	pause();
+	else 
+	pause_switch = 0;
+  #endif
   #if defined(CONTROLLERFAN_PIN) && CONTROLLERFAN_PIN > -1
     controllerFan(); //Check if fan should be turned on to cool stepper drivers down
   #endif
@@ -4386,4 +4419,3 @@ bool setTargetedHotend(int code){
   }
   return false;
 }
-

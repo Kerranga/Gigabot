@@ -598,7 +598,8 @@
     #define X_DIR_PIN          55
     #define X_ENABLE_PIN       38
     #define X_MIN_PIN           3
-    #define X_MAX_PIN           2
+    #define X_MAX_PIN           2    
+	#define PAUSE_PIN           2      // X_MAX_PIN
 
     #define Y_STEP_PIN         60
     #define Y_DIR_PIN          61
@@ -648,7 +649,7 @@
   #endif
 
   #if MOTHERBOARD == 33 || MOTHERBOARD == 35 || MOTHERBOARD == 67 || MOTHERBOARD == 68
-    #define FAN_PIN            9 // (Sprinter config)
+    #define FAN_PIN            17 // (Sprinter config) was 9
   #else
     #define FAN_PIN            4 // IO pin. Buffer needed
   #endif
@@ -676,7 +677,7 @@
   #endif
 
   #if MOTHERBOARD == 33 || MOTHERBOARD == 67
-    #define HEATER_1_PIN       -1
+    #define HEATER_1_PIN       9 //was -1
   #else
     #define HEATER_1_PIN       9    // EXTRUDER 2 (FAN On Sprinter)
   #endif
@@ -697,8 +698,8 @@
     #define HEATER_2_PIN       -1
   #endif
 
-  #define TEMP_0_PIN         13   // ANALOG NUMBERING
-  #define TEMP_1_PIN         15   // ANALOG NUMBERING
+  #define TEMP_0_PIN         4   // ANALOG NUMBERING was 13
+  #define TEMP_1_PIN         5   // ANALOG NUMBERING was 15
   #if MOTHERBOARD == 68
     #define TEMP_2_PIN         12   // ANALOG NUMBERING
     #define TEMP_3_PIN         11   // ANALOG NUMBERING
@@ -719,7 +720,7 @@
     #endif
   #endif
 
-  #define TEMP_BED_PIN       14   // ANALOG NUMBERING
+  #define TEMP_BED_PIN       14   // ANALOG NUMBERING was 14
 
   #ifdef NUM_SERVOS
     #define SERVO0_PIN         11
@@ -745,6 +746,10 @@
     #if MOTHERBOARD == 67
       #define STAT_LED_RED       6
       #define STAT_LED_BLUE     11
+    #endif
+    #if MOTHERBOARD == 68
+      #define STAT_LED_RED      32
+      #define STAT_LED_BLUE     35
     #endif
   #endif
 
@@ -779,6 +784,19 @@
         #define BTN_ENC -1
         #define SDSS 53
         #define SDCARDDETECT 49
+      #elif defined(VIKI2) || defined(miniVIKI)
+        #define BEEPER 33
+        // Pins for DOGM SPI LCD Support
+        #define DOGLCD_A0  44
+        #define DOGLCD_CS  45
+        #define LCD_SCREEN_ROT_180
+        
+        //The encoder and click button
+        #define BTN_EN1 22
+        #define BTN_EN2 7
+        #define BTN_ENC 39  //the click switch
+     
+        #define SDCARDDETECT -1
       #else
         //arduino pin which triggers an piezzo beeper
         #define BEEPER 33  // Beeper on AUX-4
@@ -1774,6 +1792,26 @@
 #define KILL_PIN           -1
 #define ALARM_PIN          -1
 
+#if defined(VIKI2) || defined(miniVIKI)
+        #define BEEPER 32 //FastIO
+        // Pins for DOGM SPI LCD Support
+        #define DOGLCD_A0  42 //Non-FastIO
+        #define DOGLCD_CS  43 //Non-FastIO
+        #define LCD_SCREEN_ROT_180
+        
+        //The encoder and click button (FastIO Pins)
+        #define BTN_EN1 26 
+        #define BTN_EN2 27
+        #define BTN_ENC 47  //the click switch
+     
+        #define SDCARDDETECT -1 // FastIO  
+#endif
+
+#ifdef TEMP_STAT_LEDS
+      #define STAT_LED_RED      12 //Non-FastIO
+      #define STAT_LED_BLUE     10 //Non-FastIO
+#endif 
+
 #ifndef SDSUPPORT
 // these pins are defined in the SD library if building with SD support
   #define SCK_PIN           9
@@ -2336,7 +2374,7 @@ DaveX plan for Teensylu/printrboard-type pinouts (ref teensylu & sprinter) for a
   #define KILL_PIN 80
   #ifdef NEWPANEL
    //arduino pin which triggers an piezzo beeper
-    #define BEEPER 79      // Beeper on AUX-4
+//    #define BEEPER 79      // Beeper on AUX-4
     #define LCD_PINS_RS 70
     #define LCD_PINS_ENABLE 71
     #define LCD_PINS_D4 72
@@ -2344,10 +2382,27 @@ DaveX plan for Teensylu/printrboard-type pinouts (ref teensylu & sprinter) for a
     #define LCD_PINS_D6 74
     #define LCD_PINS_D7 75
 
+    #if defined(VIKI2) || defined(miniVIKI)
+        #define BEEPER 44
+        // Pins for DOGM SPI LCD Support
+        #define DOGLCD_A0  70 
+        #define DOGLCD_CS  71 
+        #define LCD_SCREEN_ROT_180
+        
+        //The encoder and click button 
+        #define BTN_EN1 85 
+        #define BTN_EN2 84
+        #define BTN_ENC 83  //the click switch
+     
+        #define SDCARDDETECT -1 // Pin 72 if using easy adapter board   
+     #else 
     //buttons are directly attached using AUX-2
-    #define BTN_EN1 76
-    #define BTN_EN2 77
-    #define BTN_ENC 78  //the click
+        #define BTN_EN1 76
+        #define BTN_EN2 77
+        #define BTN_ENC 78  //the click
+        #define SDCARDDETECT 81    // Ramps does not use this port
+        #define BEEPER 79      // Beeper on AUX-4
+      #endif
 
     #define BLEN_C 2
     #define BLEN_B 1
@@ -2396,6 +2451,10 @@ DaveX plan for Teensylu/printrboard-type pinouts (ref teensylu & sprinter) for a
   #endif
 #endif //ULTRA_LCD
 
+  #ifdef TEMP_STAT_LEDS
+    #define STAT_LED_RED      22
+    #define STAT_LED_BLUE     32 
+  #endif
 
 #endif
 
@@ -2876,7 +2935,16 @@ DaveX plan for Teensylu/printrboard-type pinouts (ref teensylu & sprinter) for a
 #endif
 
 // Overwrite any if then... worst best way to do this...
-#define TEMP_BED_PIN        11 
+
+#if MOTHERBOARD == 67
 #define BTN_EN1 7	// Patricks change from Aug 2013 (ceg) old value 22 (mjf)
 #define BTN_EN2 22	// Patricks change from Aug 2013 (ceg) old value 7
 #define BTN_ENC 31      // the click // Patricks change from Aug 2013 (ceg)
+#endif
+
+#if MOTHERBOARD == 68
+#define BTN_EN1 22
+#define BTN_EN2  7
+#define BTN_ENC 39
+#endif
+

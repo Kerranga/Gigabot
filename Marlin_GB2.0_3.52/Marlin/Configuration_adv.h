@@ -75,7 +75,7 @@
 // extruder temperature is above/below EXTRUDER_AUTO_FAN_TEMPERATURE.
 // Multiple extruders can be assigned to the same pin in which case
 // the fan will turn on when any selected extruder is above the threshold.
-#define EXTRUDER_0_AUTO_FAN_PIN   -1
+#define EXTRUDER_0_AUTO_FAN_PIN   16
 #define EXTRUDER_1_AUTO_FAN_PIN   -1
 #define EXTRUDER_2_AUTO_FAN_PIN   -1
 #define EXTRUDER_AUTO_FAN_TEMPERATURE 50
@@ -213,8 +213,8 @@
 #endif //DUAL_X_CARRIAGE
 
 //homing hits the endstop, then retracts by this distance, before it tries to slowly bump again:
-#define X_HOME_RETRACT_MM 5
-#define Y_HOME_RETRACT_MM 5
+#define X_HOME_RETRACT_MM 10
+#define Y_HOME_RETRACT_MM 10
 #define Z_HOME_RETRACT_MM 2
 //#define QUICK_HOME  //if this is defined, if both x and y are to be homed, a diagonal move will be performed initially.
 
@@ -278,7 +278,7 @@
 // Number of channels available for I2C digipot, For Azteeg X3 Pro we have 8
 #define DIGIPOT_I2C_NUM_CHANNELS 5
 // actual motor currents in Amps, need as many here as DIGIPOT_I2C_NUM_CHANNELS
-#define DIGIPOT_I2C_MOTOR_CURRENTS {1.68, 2.2, 2.2, 1.68, 1.68}
+#define DIGIPOT_I2C_MOTOR_CURRENTS {1.68, 2.2, 2.2, 0.6, 0.6}
 
 //===========================================================================
 //=============================Additional Features===========================

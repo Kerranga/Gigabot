@@ -23,7 +23,7 @@
 // startup. Implementation of an idea by Prof Braino to inform user that any changes made to this
 // build by the user have been successfully uploaded into firmware.
 #define STRING_VERSION_CONFIG_H __DATE__ " " __TIME__ // build date and time
-#define STRING_CONFIG_H_AUTHOR "(Fiedler, GB2.0 V3.52)" // Who made the changes.
+#define STRING_CONFIG_H_AUTHOR "(STEWART, GB2.0 V3.52 DE)" // Who made the changes.
 
 // SERIAL_PORT selects which serial port should be used for communication with the host.
 // This allows the connection of wireless adapters (for instance) to non-default port pins.
@@ -82,7 +82,7 @@
 // 999 = Leapfrog
 
 #ifndef MOTHERBOARD
-#define MOTHERBOARD 67
+#define MOTHERBOARD 68
 #endif
 
 // Define this to set a custom name for your generic Mendel,
@@ -93,7 +93,7 @@
 // #define MACHINE_UUID "00000000-0000-0000-0000-000000000000"
 
 // This defines the number of extruders
-#define EXTRUDERS 1
+#define EXTRUDERS 2
 
 //// The following define selects which power supply you have. Please choose the one that matches your setup
 // 1 = ATX
@@ -141,10 +141,10 @@
 // 147 is Pt100 with 4k7 pullup
 // 110 is Pt100 with 1k pullup (non standard)
 
-#define TEMP_SENSOR_0 1
-#define TEMP_SENSOR_1 0
+#define TEMP_SENSOR_0 -1
+#define TEMP_SENSOR_1 -1
 #define TEMP_SENSOR_2 0
-#define TEMP_SENSOR_BED -1
+#define TEMP_SENSOR_BED 0
 
 // This makes temp sensor 1 a redundant sensor for sensor 0. If the temperatures difference between these sensors is to high the print will be aborted.
 //#define TEMP_SENSOR_1_AS_REDUNDANT
@@ -166,9 +166,9 @@
 // When temperature exceeds max temp, your heater will be switched off.
 // This feature exists to protect your hotend from overheating accidentally, but *NOT* from thermistor short/failure!
 // You should use MINTEMP for thermistor short/failure protection.
-#define HEATER_0_MAXTEMP 255
-#define HEATER_1_MAXTEMP 255
-#define HEATER_2_MAXTEMP 255
+#define HEATER_0_MAXTEMP 265
+#define HEATER_1_MAXTEMP 265
+#define HEATER_2_MAXTEMP 265
 #define BED_MAXTEMP 150
 
 // If your bed has low resistance e.g. .6 ohm and throws the fuse you can duty cycle it to reduce the
@@ -211,9 +211,9 @@
 //    #define  DEFAULT_Kd 440
 
 // Gigabot 2 (24 volts) 
-    #define  DEFAULT_Kp 16.22
-    #define  DEFAULT_Ki 1.65
-    #define  DEFAULT_Kd 39.85
+    #define  DEFAULT_Kp 13.0
+    #define  DEFAULT_Ki 1.35
+    #define  DEFAULT_Kd 33.0
 
 #endif // PIDTEMP
 
@@ -376,11 +376,11 @@ const bool Z_MAX_ENDSTOP_INVERTING = true; // set to true to invert the logic of
 #define max_software_endstops true  // If true, axis won't move to coordinates greater than the defined lengths below.
 
 // Travel limits after homing
-#define X_MAX_POS 605
+#define X_MAX_POS 600
 #define X_MIN_POS 0
 #define Y_MAX_POS 615
 #define Y_MIN_POS 0
-#define Z_MAX_POS 602
+#define Z_MAX_POS 600
 #define Z_MIN_POS 0
 
 #define X_MAX_LENGTH (X_MAX_POS - X_MIN_POS)
@@ -497,18 +497,18 @@ const bool Z_MAX_ENDSTOP_INVERTING = true; // set to true to invert the logic of
 
 // default settings
 
-#define DEFAULT_AXIS_STEPS_PER_UNIT   {118.52,118.52,4031.5,1850} // default steps per unit for Ultimaker
-#define DEFAULT_MAX_FEEDRATE          {175, 175, 5, 60}    // (mm/sec)
+#define DEFAULT_AXIS_STEPS_PER_UNIT   {118.52,118.52,4031.5,1025} // default steps per unit for Ultimaker
+#define DEFAULT_MAX_FEEDRATE          {165, 165, 5, 100}    // (mm/sec)
 #define DEFAULT_MAX_ACCELERATION      {9000,9000,100,10000}    // X, Y, Z, E maximum start speed for accelerated moves. E default values are good for Skeinforge 40+, for older versions raise them a lot.
 
-#define DEFAULT_ACCELERATION          1500    // X, Y, Z and E max acceleration in mm/s^2 for printing moves
-#define DEFAULT_RETRACT_ACCELERATION  1500   // X, Y, Z and E max acceleration in mm/s^2 for retracts
+#define DEFAULT_ACCELERATION          3000    // X, Y, Z and E max acceleration in mm/s^2 for printing moves
+#define DEFAULT_RETRACT_ACCELERATION  3000   // X, Y, Z and E max acceleration in mm/s^2 for retracts
 
 // Offset of the extruders (uncomment if using more than one and relying on firmware to position when changing).
 // The offset has to be X=0, Y=0 for the extruder 0 hotend (default extruder).
 // For the other hotends it is their distance from the extruder 0 hotend.
-// #define EXTRUDER_OFFSET_X {0.0, 20.00} // (in mm) for each extruder, offset of the hotend on the X axis
-// #define EXTRUDER_OFFSET_Y {0.0, 5.00}  // (in mm) for each extruder, offset of the hotend on the Y axis
+// #define EXTRUDER_OFFSET_X {0.0, 55.5} // (in mm) for each extruder, offset of the hotend on the X axis
+// #define EXTRUDER_OFFSET_Y {0.0, 0.00}  // (in mm) for each extruder, offset of the hotend on the Y axis
 
 // The speed change that does not require acceleration (i.e. the software might assume it can be done instantaneously)
 #define DEFAULT_XYJERK                20.0    // (mm/sec)
@@ -565,6 +565,12 @@ const bool Z_MAX_ENDSTOP_INVERTING = true; // set to true to invert the logic of
 // http://reprap.org/wiki/MaKr3d_MaKrPanel
 //#define MAKRPANEL
 
+// The Panucatt Devices Viki 2.0 and mini Viki with Graphic LCD
+// http://panucatt.com
+// ==> REMEMBER TO INSTALL U8glib to your ARDUINO library folder: http://code.google.com/p/u8glib/wiki/u8glib
+#define VIKI2
+//#define miniVIKI
+
 // The RepRapDiscount Smart Controller (white PCB)
 // http://reprap.org/wiki/RepRapDiscount_Smart_Controller
 //#define REPRAP_DISCOUNT_SMART_CONTROLLER
@@ -596,6 +602,21 @@ const bool Z_MAX_ENDSTOP_INVERTING = true; // set to true to invert the logic of
  #define ULTIPANEL
  #define NEWPANEL
  #define DEFAULT_LCD_CONTRAST 17
+#endif
+
+#if defined(miniVIKI) || defined(VIKI2)
+ #define ULTRA_LCD  //general LCD support, also 16x2
+ #define DOGLCD  // Support for SPI LCD 128x64 (Controller ST7565R graphic Display Family)
+ #define ULTIMAKERCONTROLLER //as available from the Ultimaker online store.
+ 
+  #ifdef miniVIKI
+   #define DEFAULT_LCD_CONTRAST 95
+  #else
+   #define DEFAULT_LCD_CONTRAST 40
+  #endif
+  
+ #define ENCODER_PULSES_PER_STEP 4
+ #define ENCODER_STEPS_PER_MENU_ITEM 1
 #endif
 
 #if defined (REPRAP_DISCOUNT_FULL_GRAPHIC_SMART_CONTROLLER)
@@ -663,7 +684,7 @@ const bool Z_MAX_ENDSTOP_INVERTING = true; // set to true to invert the logic of
 #endif
 
 // Panucatt VIKI LCD with status LEDs, integrated click & L/R/U/P buttons, separate encoder inputs
-#define LCD_I2C_VIKI
+//#define LCD_I2C_VIKI
 #ifdef LCD_I2C_VIKI
   // This uses the LiquidTWI2 library v1.2.3 or later ( https://github.com/lincomatic/LiquidTWI2 )
   // Make sure the LiquidTWI2 directory is placed in the Arduino or Sketchbook libraries subdirectory.
@@ -723,7 +744,7 @@ const bool Z_MAX_ENDSTOP_INVERTING = true; // set to true to invert the logic of
 // Temperature status LEDs that display the hotend and bet temperature.
 // If all hotends and bed temperature and temperature setpoint are < 54C then the BLUE led is on.
 // Otherwise the RED led is on. There is 1C hysteresis.
-//#define TEMP_STAT_LEDS
+#define TEMP_STAT_LEDS
 
 // Use software PWM to drive the fan, as for the heaters. This uses a very low frequency
 // which is not ass annoying as with the hardware PWM. On the other hand, if this frequency
